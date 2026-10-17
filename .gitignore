@@ -1,0 +1,25 @@
+
+# Variáveis de ambiente e segredos
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# Ambiente virtual Python
+backend/venv/
+backend/.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Django
+backend/staticfiles/
+backend/media/
+
+# React e Node.js
+frontend/node_modules/
+frontend/dist/
+
+# Editor
+.vscode/
