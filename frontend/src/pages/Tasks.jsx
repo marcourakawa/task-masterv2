@@ -4,6 +4,46 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import "./Tasks.css";
 
+
+
+function getApiErrorMessage(error, fallback) {
+    if (!error.response) {
+        return "Não foi possível conectar ao servidor. Verifique sua conexão.";
+    }
+
+    const status = error.response.status;
+    const data = error.response.data;
+
+    if (status === 400) {
+        if (typeof data === "object" && data !== null) {
+            const messages = Object.values(data)
+                .flat()
+                .filter((message) => typeof message === "string");
+
+            if (messages.length > 0) {
+                return messages.join(" ");
+            }
+        }
+
+        return "Os dados enviados são inválidos.";
+    }
+
+    if (status === 403) {
+        return "Você não tem permissão para realizar esta ação.";
+    }
+
+    if (status === 404) {
+        return "A tarefa ou o recurso solicitado não foi encontrado.";
+    }
+
+    if (status >= 500) {
+        return "Ocorreu um erro no servidor. Tente novamente mais tarde.";
+    }
+
+    return fallback;
+}
+
+
 function Tasks() {
     const [tasks, setTasks] = useState([]);
     const [title, setTitle] = useState("");
@@ -16,6 +56,7 @@ function Tasks() {
 
     const navigate = useNavigate();
 
+    
     async function loadTasks() {
         const token = sessionStorage.getItem("access");
 
@@ -25,32 +66,27 @@ function Tasks() {
         }
 
         try {
-            const response = await api.get("tasks/", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
+            const response = await api.get("tasks/");
             setTasks(response.data);
         } catch (error) {
-            if (error.response?.status === 401) {
-                sessionStorage.removeItem("access");
-                sessionStorage.removeItem("refresh");
-                navigate("/login", { replace: true });
-                return;
-            }
-
-            setError("Não foi possível carregar as tarefas.");
+            setError(
+                getApiErrorMessage(
+                    error,
+                    "Não foi possível carregar as tarefas."
+                )
+            );
         } finally {
             setLoading(false);
         }
     }
+
     
 
     useEffect(() => {
         loadTasks();
     }, []);
 
+    
     async function handleSubmit(event) {
         event.preventDefault();
         setError("");
@@ -76,12 +112,7 @@ function Tasks() {
             if (editingTaskId !== null) {
                 response = await api.patch(
                     `tasks/${editingTaskId}/`,
-                    taskData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    taskData
                 );
 
                 setTasks((currentTasks) =>
@@ -92,15 +123,7 @@ function Tasks() {
 
                 setEditingTaskId(null);
             } else {
-                response = await api.post(
-                    "tasks/",
-                    taskData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                response = await api.post("tasks/", taskData);
 
                 setTasks((currentTasks) => [
                     response.data,
@@ -112,16 +135,11 @@ function Tasks() {
             setDescription("");
             setDueDate("");
         } catch (error) {
-            if (error.response?.status === 401) {
-                sessionStorage.removeItem("access");
-                sessionStorage.removeItem("refresh");
-                navigate("/login", { replace: true });
-                return;
-            }
-
             setError(
-                error.response?.data?.title?.[0] ||
-                "Não foi possível salvar a tarefa."
+                getApiErrorMessage(
+                    error,
+                    "Não foi possível salvar a tarefa."
+                )
             );
         } finally {
             setSaving(false);
@@ -129,6 +147,8 @@ function Tasks() {
     }
 
 
+
+    
     async function handleStatusChange(taskId, newStatus) {
         const token = sessionStorage.getItem("access");
 
@@ -139,14 +159,9 @@ function Tasks() {
 
         try {
             const response = await api.patch(
-            `tasks/${taskId}/`,
-            { status: newStatus },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+                `tasks/${taskId}/`,
+                { status: newStatus }
+            );
 
             setTasks((currentTasks) =>
                 currentTasks.map((task) =>
@@ -154,54 +169,46 @@ function Tasks() {
                 )
             );
         } catch (error) {
-            if (error.response?.status === 401) {
-                sessionStorage.removeItem("access");
-                sessionStorage.removeItem("refresh");
-                navigate("/login", { replace: true });
-                return;
-            }
-
-            setError("Não foi possível atualizar o status da tarefa.");
+            setError(
+                getApiErrorMessage(
+                    error,
+                    "Não foi possível atualizar o status da tarefa."
+                )
+            );
         }
     }
 
+    
     async function handleDelete(taskId) {
         const confirmed = window.confirm(
-            'Tem certeza que deseja excluir esta tarefa?'
-        )
+            "Tem certeza que deseja excluir esta tarefa?"
+        );
 
         if (!confirmed) {
             return;
         }
 
-        const token = sessionStorage.getItem('access');
+        const token = sessionStorage.getItem("access");
 
         if (!token) {
-            navigate('/login');
+            navigate("/login", { replace: true });
             return;
         }
 
         try {
-            await api.delete(`tasks/${taskId}/`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await api.delete(`tasks/${taskId}/`);
 
             setTasks((currentTasks) =>
                 currentTasks.filter((task) => task.id !== taskId)
             );
         } catch (error) {
-            if (error.response?.status === 401) {
-                sessionStorage.removeItem('access');
-                sessionStorage.removeItem('refresh');
-                navigate('/login');
-                return;
+            setError(
+                getApiErrorMessage(
+                    error,
+                    "Não foi possível excluir a tarefa."
+                )
+            );
         }
-
-        setError('Não foi possível excluir a tarefa.')
-    }
-
     }
 
     function handleLogout() {
@@ -237,7 +244,7 @@ function Tasks() {
         <main className="tasks-page">
             <header className="tasks-header">
                 <div>
-                    <h1>TaskMaster</h1>
+                    <h1>Task Master</h1>
                     <p>Organize suas tarefas e acompanhe seu progresso.</p>
                 </div>
 
