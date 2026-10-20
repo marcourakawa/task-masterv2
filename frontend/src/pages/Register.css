@@ -1,83 +1,505 @@
+/* ==========================================================================
+   Cadastro: tema pastel (espelha o Login)
+   ========================================================================== */
 
 .register-container {
+    /* Superfícies e bordas */
+    --reg-surface: rgba(255, 255, 255, 0.8);
+    --reg-surface-solid: #ffffff;
+    --reg-card-border: rgba(255, 255, 255, 0.95);
+    --reg-border: #e6def2;
+    --reg-border-hover: #d6cbee;
+    --reg-input-bg: #fdfbff;
+    --reg-input-bg-focus: #ffffff;
+
+    /* Texto (contraste ajustado para AA) */
+    --reg-heading: #2f2b3a;
+    --reg-text: #3f3a4a;
+    --reg-muted: #6f6a7d;
+    --reg-placeholder: #a29cb0;
+
+    /* Acentos pastel */
+    --reg-accent: #cfc8f5;
+    --reg-accent-2: #c9e4f7;
+    --reg-accent-text: #38326a;
+    --reg-accent-soft: #eeebfc;
+    --reg-focus: #b9b0ee;
+    --reg-link: #5a4eb0;
+
+    /* Erro e validação */
+    --reg-danger: #8f3f34;
+    --reg-danger-soft: #fdeae6;
+    --reg-danger-border: #f6d2cb;
+    --reg-invalid: #e9a99d;
+
+    /* Sombras */
+    --reg-shadow: 0 24px 60px rgba(120, 100, 160, 0.16), 0 2px 8px rgba(120, 100, 160, 0.06);
+    --reg-btn-shadow: 0 8px 18px rgba(155, 143, 230, 0.28);
+    --reg-btn-shadow-hover: 0 12px 26px rgba(155, 143, 230, 0.36);
+
+    position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
-    background: #f4f6fb;
+    padding: clamp(16px, 4vw, 32px);
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(135deg, #fdf3ef 0%, #f3effc 50%, #e9f6f2 100%);
 }
 
+/* --------------------------------------------------------------------------
+   Formas decorativas
+   -------------------------------------------------------------------------- */
+
+.register-blob {
+    position: absolute;
+    z-index: -1;
+    border-radius: 50%;
+    filter: blur(64px);
+    opacity: 0.7;
+    pointer-events: none;
+    will-change: transform;
+    animation: register-float 16s ease-in-out infinite;
+}
+
+.register-blob-lavender {
+    top: -120px;
+    left: -100px;
+    width: 380px;
+    height: 380px;
+    background: #d9d3fa;
+}
+
+.register-blob-pink {
+    bottom: -140px;
+    left: 12%;
+    width: 340px;
+    height: 340px;
+    background: #fbd9e2;
+    animation-delay: -4s;
+    animation-duration: 18s;
+}
+
+.register-blob-mint {
+    top: 10%;
+    right: -120px;
+    width: 360px;
+    height: 360px;
+    background: #cdeee4;
+    animation-delay: -8s;
+}
+
+.register-blob-sky {
+    bottom: -100px;
+    right: 10%;
+    width: 300px;
+    height: 300px;
+    background: #d3e8fa;
+    animation-delay: -11s;
+    animation-duration: 20s;
+}
+
+@keyframes register-float {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    33%      { transform: translate3d(28px, -24px, 0) scale(1.05); }
+    66%      { transform: translate3d(-18px, 18px, 0) scale(0.97); }
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+
 .register-form {
+    position: relative;
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 32px;
-    border-radius: 16px;
-    background: #ffffff;
-    box-shadow: 0 8px 30px rgb(0 0 0 / 8%);
+    padding: 44px 38px 36px;
+    background: var(--reg-surface-solid);
+    border: 1px solid var(--reg-card-border);
+    border-radius: 28px;
+    box-shadow: var(--reg-shadow);
+    animation: register-card-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .register-form {
+        background: var(--reg-surface);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
+        backdrop-filter: blur(16px) saturate(140%);
+    }
+}
+
+@keyframes register-card-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* --------------------------------------------------------------------------
+   Cabeçalho
+   -------------------------------------------------------------------------- */
+
+.register-logo {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 22px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e4defb 0%, #d3e8fa 100%);
+    box-shadow:
+        0 10px 22px rgba(97, 85, 184, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    transform: rotate(-6deg);
+    transition: transform 280ms ease;
+}
+
+.register-logo svg {
+    transform: rotate(6deg);
+    transition: transform 280ms ease;
+}
+
+.register-form:hover .register-logo {
+    transform: rotate(0deg) scale(1.04);
+}
+
+.register-form:hover .register-logo svg {
+    transform: rotate(0deg);
 }
 
 .register-form h1 {
-    margin: 0;
-    color: #24345f;
-    font-size: 30px;
+    margin: 0 0 8px;
+    color: var(--reg-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-align: center;
 }
 
-.register-form p {
-    color: #64708a;
+.register-form .register-subtitle,
+.register-form > h1 + p {
+    margin: 0 0 30px;
+    color: var(--reg-muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    text-align: center;
+    text-wrap: balance;
+}
+
+/* --------------------------------------------------------------------------
+   Campos
+   -------------------------------------------------------------------------- */
+
+.register-field {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 18px;
 }
 
 .register-form label {
+    margin: 0 0 8px;
+    color: var(--reg-text);
+    font-size: 0.8125rem;
     font-weight: 600;
-    color: #24345f;
+    letter-spacing: 0.01em;
+}
+
+.register-input-wrapper {
+    position: relative;
+}
+
+.register-input-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: var(--reg-placeholder);
+    pointer-events: none;
+    transition: color 160ms ease;
+}
+
+.register-input-wrapper:focus-within .register-input-icon {
+    color: var(--reg-link);
 }
 
 .register-form input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #d5dbea;
-    border-radius: 8px;
+    min-height: 48px;
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--reg-text);
+    background: var(--reg-input-bg);
+    border: 1.5px solid var(--reg-border);
+    border-radius: 14px;
     font: inherit;
+    font-size: 0.9375rem;
+    outline: none;
+    box-sizing: border-box;
+    transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        background-color 160ms ease;
+}
+
+/* Espaço para o ícone só quando existe o wrapper com ícone */
+.register-input-wrapper input {
+    padding-left: 42px;
+}
+
+.register-form input::placeholder {
+    color: var(--reg-placeholder);
+}
+
+.register-form input:hover:not(:focus) {
+    border-color: var(--reg-border-hover);
 }
 
 .register-form input:focus {
-    outline: 2px solid #8ed6d0;
-    border-color: transparent;
+    background: var(--reg-input-bg-focus);
+    border-color: var(--reg-focus);
+    box-shadow: 0 0 0 4px var(--reg-accent-soft);
 }
 
-.register-form button {
+/* Campo inválido (só depois de o usuário interagir) */
+.register-form input:user-invalid {
+    border-color: var(--reg-invalid);
+}
+
+.register-form input:user-invalid:focus {
+    box-shadow: 0 0 0 4px var(--reg-danger-soft);
+}
+
+/* Autofill do navegador sem quebrar o tema */
+.register-form input:-webkit-autofill,
+.register-form input:-webkit-autofill:hover,
+.register-form input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--reg-text);
+    caret-color: var(--reg-text);
+    box-shadow: 0 0 0 1000px var(--reg-accent-soft) inset;
+    transition: background-color 9999s ease-out;
+}
+
+/* --------------------------------------------------------------------------
+   Botão principal
+   -------------------------------------------------------------------------- */
+
+.register-form button.register-submit {
+    position: relative;
+    width: 100%;
+    min-height: 50px;
     margin-top: 8px;
-    padding: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow: hidden;
+    color: var(--reg-accent-text);
+    background: linear-gradient(135deg, var(--reg-accent) 0%, var(--reg-accent-2) 100%);
     border: none;
-    border-radius: 8px;
-    background: #24345f;
-    color: #ffffff;
+    border-radius: 14px;
     font: inherit;
+    font-size: 0.9375rem;
     font-weight: 600;
+    letter-spacing: 0.01em;
     cursor: pointer;
+    box-shadow: var(--reg-btn-shadow);
+    transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.register-form button:disabled {
-    opacity: 0.7;
+/* Brilho que atravessa o botão no hover */
+.register-form button.register-submit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        110deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 600ms ease;
+    pointer-events: none;
+}
+
+.register-form button.register-submit:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: var(--reg-btn-shadow-hover);
+}
+
+.register-form button.register-submit:hover:not(:disabled)::after {
+    transform: translateX(120%);
+}
+
+.register-form button.register-submit:active:not(:disabled) {
+    transform: translateY(0) scale(0.99);
+    box-shadow: 0 4px 10px rgba(155, 143, 230, 0.25);
+}
+
+.register-form button.register-submit:disabled {
+    opacity: 0.75;
     cursor: wait;
 }
 
-.register-form .register-error {
-    margin: 0;
-    color: #c0392b;
-    font-size: 14px;
+.register-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(56, 50, 106, 0.25);
+    border-top-color: var(--reg-accent-text);
+    border-radius: 50%;
+    animation: register-spin 700ms linear infinite;
 }
 
-.register-footer {
-    margin-bottom: 0;
+@keyframes register-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Foco por teclado */
+.register-form button.register-submit:focus-visible,
+.register-footer a:focus-visible {
+    outline: 3px solid var(--reg-focus);
+    outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Erro e rodapé
+   -------------------------------------------------------------------------- */
+
+.register-form .register-error {
+    margin: 0 0 16px;
+    padding: 11px 14px;
+    color: var(--reg-danger);
+    background: var(--reg-danger-soft);
+    border: 1px solid var(--reg-danger-border);
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    animation: register-shake 380ms ease-out both;
+}
+
+@keyframes register-shake {
+    0%   { opacity: 0; transform: translateX(0); }
+    20%  { opacity: 1; transform: translateX(-5px); }
+    40%  { transform: translateX(5px); }
+    60%  { transform: translateX(-3px); }
+    80%  { transform: translateX(2px); }
+    100% { transform: translateX(0); }
+}
+
+.register-form .register-footer {
+    margin: 26px 0 0;
+    color: var(--reg-muted);
+    font-size: 0.8125rem;
     text-align: center;
-    font-size: 14px;
 }
 
 .register-footer a {
-    color: #24345f;
+    color: var(--reg-link);
     font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: color 160ms ease;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsivo
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .register-form {
+        padding: 34px 22px 28px;
+        border-radius: 24px;
+    }
+
+    .register-blob {
+        filter: blur(48px);
+    }
+
+    /* 16px evita o zoom automático do iOS ao focar o campo */
+    .register-form input {
+        font-size: 1rem;
+    }
+}
+
+@media (max-height: 760px) {
+    .register-container {
+        align-items: flex-start;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Modo escuro (pastéis suaves sobre fundo profundo)
+   -------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+    .register-container {
+        --reg-surface: rgba(40, 36, 58, 0.78);
+        --reg-surface-solid: #28243a;
+        --reg-card-border: rgba(255, 255, 255, 0.08);
+        --reg-border: #3c3754;
+        --reg-border-hover: #4d4769;
+        --reg-input-bg: #221f33;
+        --reg-input-bg-focus: #1d1a2c;
+
+        --reg-heading: #f3f0fb;
+        --reg-text: #e2ddf0;
+        --reg-muted: #aaa4bd;
+        --reg-placeholder: #7d7794;
+
+        --reg-accent-soft: rgba(185, 176, 238, 0.16);
+        --reg-focus: #a79ce8;
+        --reg-link: #c4bbf7;
+
+        --reg-danger: #f5b9ae;
+        --reg-danger-soft: rgba(245, 185, 174, 0.12);
+        --reg-danger-border: rgba(245, 185, 174, 0.28);
+        --reg-invalid: #d98b7d;
+
+        --reg-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
+
+        background: linear-gradient(135deg, #1d1a2b 0%, #211d33 50%, #172326 100%);
+    }
+
+    .register-blob {
+        opacity: 0.22;
+    }
+
+    .register-logo {
+        box-shadow:
+            0 10px 22px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Movimento reduzido
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .register-blob,
+    .register-form,
+    .register-error,
+    .register-spinner {
+        animation: none;
+    }
+
+    .register-form button.register-submit::after {
+        display: none;
+    }
+
+    .register-logo,
+    .register-logo svg,
+    .register-form button.register-submit {
+        transition: none;
+    }
 }
