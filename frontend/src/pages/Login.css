@@ -1,11 +1,25 @@
-
 .login-container {
+    --login-bg: #faf6f2;
+    --login-surface: #ffffff;
+    --login-border: #ece5de;
+    --login-heading: #2f2b3a;
+    --login-text: #3f3a4a;
+    --login-muted: #8b8596;
+    --login-accent: #cfc8f5;
+    --login-accent-hover: #c0b7f0;
+    --login-accent-text: #38326a;
+    --login-accent-soft: #eeebfc;
+    --login-link: #6155b8;
+    --login-danger: #9a4a3f;
+    --login-danger-soft: #fdeae6;
+    --login-danger-border: #f6d2cb;
+
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 24px;
-    background: var(--bg);
+    background: var(--login-bg);
 }
 
 .login-form {
@@ -13,107 +27,153 @@
     max-width: 400px;
     display: flex;
     flex-direction: column;
-    padding: 36px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    padding: 40px 36px;
+    background: var(--login-surface);
+    border: 1px solid var(--login-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(120, 100, 160, 0.08);
+}
+
+.login-logo {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: var(--login-accent-soft);
 }
 
 .login-form h1 {
-    margin: 0 0 8px;
-    color: var(--heading);
-    font-size: 30px;
-    font-weight: 700;
+    margin: 0 0 6px;
+    color: var(--login-heading);
+    font-size: 26px;
+    font-weight: 600;
     line-height: 1.2;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
     text-align: center;
 }
 
 .login-form > p:first-of-type {
-    margin: 0 0 28px;
-    color: var(--text-muted);
+    margin: 0 0 30px;
+    color: var(--login-muted);
     font-size: 14px;
     text-align: center;
 }
 
+.field {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 18px;
+}
+
 .login-form label {
     margin: 0 0 8px;
-    color: var(--heading);
-    font-size: 14px;
+    color: var(--login-text);
+    font-size: 13px;
     font-weight: 600;
 }
 
 .login-form input {
     width: 100%;
-    min-height: 44px;
-    margin: 0 0 20px;
-    padding: 10px 12px;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    min-height: 46px;
+    margin: 0;
+    padding: 10px 14px;
+    color: var(--login-text);
+    background: #fdfbf9;
+    border: 1px solid var(--login-border);
+    border-radius: 12px;
     outline: none;
     transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .login-form input::placeholder {
-    color: var(--text-muted);
-    opacity: 0.8;
+    color: var(--login-muted);
+    opacity: 0.7;
 }
 
 .login-form input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--accent-soft);
+    border-color: #b9b0ee;
+    box-shadow: 0 0 0 4px var(--login-accent-soft);
 }
 
-.login-form button {
-    width: 100%;
-    min-height: 44px;
-    margin-top: 4px;
-    padding: 11px 16px;
-    color: #ffffff;
-    background: var(--accent);
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 46px;
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    transform: translateY(-50%);
+    color: var(--login-muted);
+    background: transparent;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
+}
+
+.toggle-password:hover {
+    color: var(--login-link);
+    background: var(--login-accent-soft);
+}
+
+.login-form button.submit-button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 11px 16px;
+    color: var(--login-accent-text);
+    background: var(--login-accent);
+    border: none;
+    border-radius: 12px;
     font-size: 14px;
     font-weight: 600;
+    cursor: pointer;
     transition: background-color 160ms ease, transform 160ms ease;
 }
 
-.login-form button:hover:not(:disabled) {
-    background: var(--accent-hover);
+.login-form button.submit-button:hover:not(:disabled) {
+    background: var(--login-accent-hover);
 }
 
-.login-form button:active:not(:disabled) {
+.login-form button.submit-button:active:not(:disabled) {
     transform: scale(0.99);
 }
 
-.login-form button:disabled {
+.login-form button.submit-button:disabled {
     opacity: 0.7;
     cursor: wait;
 }
 
 .login-form .error-message {
-    margin: -4px 0 16px;
-    padding: 10px 12px;
-    color: var(--danger);
-    background: var(--accent-soft);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    color: var(--login-danger);
+    background: var(--login-danger-soft);
+    border: 1px solid var(--login-danger-border);
+    border-radius: 12px;
     font-size: 13px;
-    text-align: left;
 }
 
 .login-form .register-link {
-    margin: 24px 0 0;
-    color: var(--text-muted);
+    margin: 26px 0 0;
+    color: var(--login-muted);
     font-size: 13px;
     text-align: center;
 }
 
 .login-form .register-link a {
-    color: var(--accent);
+    color: var(--login-link);
     font-weight: 600;
     text-decoration: none;
 }
@@ -128,6 +188,6 @@
     }
 
     .login-form {
-        padding: 28px 22px;
+        padding: 32px 22px;
     }
 }
